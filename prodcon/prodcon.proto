@@ -1,0 +1,19 @@
+
+syntax = "proto3";
+
+option go_package = "github.com/MBaczun/producer-consumer/prodcon";
+
+package prodcon;
+
+service Consumer {
+    rpc ConsumeSingleString(String) returns (Ack) {}
+    rpc ConsumeStream(stream String) returns (Ack) {}
+}
+
+message String {
+    string value = 1;
+}
+
+message Ack {
+    bool value = 1;
+}
