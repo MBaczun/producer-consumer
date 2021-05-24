@@ -22,7 +22,7 @@ type consumerServer struct {
 }
 
 func (s *consumerServer) ConsumeSingleString(ctx context.Context, str *pb.String) (*pb.Ack, error) {
-	fmt.Printf("Consumed %v", str.Value)
+	fmt.Printf("Consumed %v\n", str.Value)
 	return &pb.Ack{Value: true}, nil
 }
 
@@ -30,12 +30,12 @@ func (s *consumerServer) ConsumeStream(stream pb.Consumer_ConsumeStreamServer) e
 	for {
 		str, err := stream.Recv()
 		if err == io.EOF {
-			return nil
+			return stream.SendAndClose(&pb.Ack{Value: true})
 		}
 		if err != nil {
 			return err
 		}
-		fmt.Printf("Consumed %v", str.Value)
+		fmt.Printf("Consumed %v\n", str.Value)
 	}
 }
 
