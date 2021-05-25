@@ -24,7 +24,8 @@ jobs:
         run: echo Hello, world!
 
       # Runs a set of commands using the runners shell
-      - name: Run a multi-line script
-        run: |
-          echo Add other actions to build,
-          echo test, and deploy your project.
+      - name: ls
+        run: ls
+        
+      - name: docker compose
+        run: docker-compose up -d
