@@ -2,6 +2,7 @@ package main
 
 import (
 	"context"
+	"flag"
 	"fmt"
 	"io"
 	"log"
@@ -10,10 +11,6 @@ import (
 	"google.golang.org/grpc"
 
 	pb "github.com/MBaczun/producer-consumer/prodcon"
-)
-
-const (
-	port = 3030
 )
 
 type consumerServer struct {
@@ -40,7 +37,10 @@ func (s *consumerServer) ConsumeStream(stream pb.Consumer_ConsumeStreamServer) e
 }
 
 func main() {
-	lis, err := net.Listen("tcp", fmt.Sprintf("localhost:%d", port))
+	port := flag.Int("p", 3030, "Port")
+	flag.Parse()
+
+	lis, err := net.Listen("tcp", fmt.Sprintf(":%d", *port))
 	if err != nil {
 		log.Fatalf("failed to listen: %v", err)
 	}
@@ -48,6 +48,8 @@ func main() {
 	grpcServer := grpc.NewServer()
 	s := consumerServer{}
 	pb.RegisterConsumerServer(grpcServer, &s)
+
+	fmt.Println("Server Started")
 
 	if err := grpcServer.Serve(lis); err != nil {
 		log.Fatalf("failed to serve: %s", err)

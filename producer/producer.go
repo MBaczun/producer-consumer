@@ -2,16 +2,13 @@ package main
 
 import (
 	"context"
+	"flag"
 	"fmt"
 	"log"
 
 	"google.golang.org/grpc"
 
 	pb "github.com/MBaczun/producer-consumer/prodcon"
-)
-
-const (
-	port = 3030
 )
 
 func produceSingleString(client pb.ConsumerClient, s string) {
@@ -45,8 +42,13 @@ func produceStreamStrings(client pb.ConsumerClient, strings []string) {
 }
 
 func main() {
+	address := flag.String("addr", "localhost", "Server IP address")
+	port := flag.Int("p", 3030, "Server Port")
+	flag.Parse()
 
-	conn, err := grpc.Dial(fmt.Sprintf("localhost:%d", port), grpc.WithInsecure())
+	fmt.Printf("CLient using address: %v\n", *address)
+
+	conn, err := grpc.Dial(fmt.Sprintf("%v:%v", *address, *port), grpc.WithInsecure())
 	if err != nil {
 		log.Fatalf("fail to dial: %s", err)
 	}

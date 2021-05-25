@@ -1,0 +1,11 @@
+version: "3.7"
+
+services:
+    consumer:
+        image: consumer
+
+    producer:
+        image: producer
+        command: go run ./producer/producer.go --addr consumer
+        depends_on:
+            - consumer
